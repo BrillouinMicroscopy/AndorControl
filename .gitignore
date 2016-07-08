@@ -1,0 +1,13 @@
+# Temporary MATLAB files #
+##########################
+*.asv
+
+# Image files #
+##############
+*.h5
+*.tiff
+
+# Unittest files #
+##################
+Tests/log.txt
+Tests/ExitCode.txt
