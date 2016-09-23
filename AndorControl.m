@@ -136,7 +136,7 @@ classdef AndorControl < handle
         function buf = getBuffer(obj)
             [rc] = AT_QueueBuffer(obj.handle,obj.ImageSizeBytes);
             AT_CheckWarning(rc);    
-            [rc, buf] = AT_WaitBuffer(obj.handle,1000);
+            [rc, buf] = AT_WaitBuffer(obj.handle,2000);
             AT_CheckWarning(rc);
         end
         
