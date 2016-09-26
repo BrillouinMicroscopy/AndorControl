@@ -135,8 +135,9 @@ classdef AndorControl < handle
         %function return the image buffer
         function buf = getBuffer(obj)
             [rc] = AT_QueueBuffer(obj.handle,obj.ImageSizeBytes);
-            AT_CheckWarning(rc);    
-            [rc, buf] = AT_WaitBuffer(obj.handle,2000);
+            AT_CheckWarning(rc);
+            % Set timeout dynamically (in milliseconds)
+            [rc, buf] = AT_WaitBuffer(obj.handle,obj.ExposureTime*1e3 + 1000);
             AT_CheckWarning(rc);
         end
         
