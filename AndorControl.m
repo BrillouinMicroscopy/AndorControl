@@ -130,6 +130,12 @@ classdef AndorControl < handle
             AT_CheckWarning(rc);
         end
         
+        %function triggers image acquisition
+        function trigger(obj)
+            [rc] = AT_Command(obj.handle,'SoftwareTrigger');
+            AT_CheckWarning(rc);
+        end
+        
         %% Handle image buffer
         
         %function return the image buffer
