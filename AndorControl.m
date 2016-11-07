@@ -38,6 +38,13 @@ classdef AndorControl < handle
         
         %% Set and get acquisition parameters
         
+        function string = GetEnumString (obj, featurename)
+           [rc,index] = AT_GetEnumIndex(obj.handle,featurename);
+            AT_CheckWarning(rc);
+           [rc,string]=AT_GetEnumStringByIndex(obj.handle,featurename,index,100);
+           AT_CheckWarning(rc);
+        end
+        
         %function sets the exposure time
         function set.ExposureTime (obj,ExTime)
             [rc] = AT_SetFloat(obj.handle,'ExposureTime',ExTime);
@@ -57,9 +64,8 @@ classdef AndorControl < handle
         end
         
         %function gets the cycle mode
-        function ExTime = get.CycleMode (obj)
-            [rc,ExTime] = AT_GetEnumString(obj.handle,'CycleMode');
-            AT_CheckWarning(rc);
+        function CycleMode = get.CycleMode (obj)
+            CycleMode = obj.GetEnumString('CycleMode');
         end
         
         %function sets the trigger mode
@@ -69,9 +75,8 @@ classdef AndorControl < handle
         end
         
         %function gets the trigger mode
-        function ExTime = get.TriggerMode (obj)
-            [rc,ExTime] = AT_GetEnumString(obj.handle,'TriggerMode');
-            AT_CheckWarning(rc);
+        function TriggerMode = get.TriggerMode (obj)
+            TriggerMode = obj.GetEnumString('TriggerMode');
         end
         
         %function sets the simple PreAmp gain control
@@ -81,9 +86,8 @@ classdef AndorControl < handle
         end
         
         %function gets the simple PreAmp gain control
-        function ExTime = get.SimplePreAmpGainControl (obj)
-            [rc,ExTime] = AT_GetEnumString(obj.handle,'SimplePreAmpGainControl');
-            AT_CheckWarning(rc);
+        function SimplePreAmpGainControl = get.SimplePreAmpGainControl (obj)
+            SimplePreAmpGainControl = obj.GetEnumString('SimplePreAmpGainControl');
         end
         
         %function sets the pixel encoding
@@ -93,9 +97,8 @@ classdef AndorControl < handle
         end
         
         %function gets the pixel encoding
-        function ExTime = get.PixelEncoding (obj)
-            [rc,ExTime] = AT_GetEnumString(obj.handle,'PixelEncoding');
-            AT_CheckWarning(rc);
+        function PixelEncoding = get.PixelEncoding (obj)
+            PixelEncoding = obj.GetEnumString('PixelEncoding');
         end
         
         %function sets the frame count
@@ -142,6 +145,9 @@ classdef AndorControl < handle
         function buf = getBuffer(obj)
             [rc] = AT_QueueBuffer(obj.handle,obj.ImageSizeBytes);
             AT_CheckWarning(rc);
+            if strcmp(obj.TriggerMode, 'Software')
+                obj.trigger();
+            end
             % Set timeout dynamically (in milliseconds)
             [rc, buf] = AT_WaitBuffer(obj.handle,obj.ExposureTime*1e3 + 1000);
             AT_CheckWarning(rc);
