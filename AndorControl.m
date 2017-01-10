@@ -7,6 +7,9 @@ classdef AndorControl < handle
         AOI;
     end
     properties (Dependent)
+        SensorCooling;
+        SensorTemperatureStatus;
+        SensorTemperature;
         ExposureTime;
         TriggerMode;
         CycleMode;
@@ -33,6 +36,27 @@ classdef AndorControl < handle
             [rc] = AT_Close(obj.handle);
             AT_CheckWarning(rc);
             [rc] = AT_FinaliseLibrary();
+            AT_CheckWarning(rc);
+        end
+        
+        %% Enable and disable sensor cooling, get status
+        
+        function set.SensorCooling (obj,Cooling)
+            [rc] = AT_SetBool(obj.handle,'SensorCooling',Cooling);
+            AT_CheckWarning(rc);
+        end
+        
+        function Cooling = get.SensorCooling(obj)
+            [rc,Cooling] = AT_GetBool(obj.handle,'SensorCooling');
+            AT_CheckWarning(rc);
+        end
+        
+        function status = get.SensorTemperatureStatus(obj)
+            status = obj.GetEnumString('TemperatureStatus');
+        end
+        
+        function temp = get.SensorTemperature(obj)
+            [rc,temp] = AT_GetFloat(obj.handle,'SensorTemperature');
             AT_CheckWarning(rc);
         end
         
