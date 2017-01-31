@@ -26,7 +26,7 @@ classdef AndorControl < handle
             AT_CheckError(rc);
             [rc,obj.handle] = AT_Open(0);
             AT_CheckError(rc);
-            obj.AOI = Utils.AndorControl.AOI.init(obj.handle);
+            obj.AOI = BA_Utils.AndorControl.AOI.init(obj.handle);
         end
         
         %% Destructor
